@@ -10,6 +10,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 
 
@@ -35,11 +36,11 @@ export default class RHHightScore extends Component {
         <Text style={styles.scores}>
           {contents}
         </Text>
-        <TouchableOpacity onPress={this._onNextPage.bind(this)}>
-          <Text style={styles.button}>
-            Next Page
-          </Text>
-        </TouchableOpacity>
+        <Button 
+          onPress={this._onNextPage.bind(this)}
+          title='Next Page'
+          color = '#841584'
+        />
       </View>
     );
   }
