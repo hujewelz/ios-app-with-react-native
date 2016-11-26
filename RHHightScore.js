@@ -1,7 +1,8 @@
 /**
  * @author jewelz hu
- * @date 2016 11-25
+ * @date 2016-11-25
  */
+
 import React, { Component, propTypes } from 'react';
 import {
   AppRegistry,
@@ -11,6 +12,7 @@ import {
   Text,
   TouchableOpacity,
   Button,
+  Image,
 } from 'react-native';
 
 
@@ -55,6 +57,8 @@ class SecondPage extends Component {
         <Text style={styles.title}>
             Second Page!
         </Text>
+        <Image source={{uri:'http://imgsrc.baidu.com/forum/w%3D580/sign=5099344aca1349547e1ee86c664f92dd/6cd5202ac65c10385d054209b3119313b17e8903.jpg'}}
+        style={{width:401, height:277}} />
       </View>
     );
   }
