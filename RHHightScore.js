@@ -10,7 +10,8 @@ import {
   NavigatorIOS,
   View,
   Text,
-  TouchableOpacity,
+  TouchableHighlight,
+  ListView,
   Button,
   Image,
 } from 'react-native';
@@ -18,34 +19,63 @@ import {
 
 export default class RHHightScore extends Component {
 
-  _onNextPage() {
+  constructor(props) {
+    super(props);
+    this._onNextPage.bind(this);
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: this.ds.cloneWithRows([])
+    };
+  }
+
+  componentWillMount() {
+    this._getMoviesFromApiAsync();
+  }
+
+  render() {
+    return (
+      <ListView 
+        dataSource = {this.state.dataSource}
+        renderRow = {this._renderRow}
+      />
+       
+    );
+  }
+
+  _renderRow(rowData, sectionID, rowID, highlightRow) {
+    return (
+      <TouchableHighlight onPress={() => {
+        this._onNextPage(rowData.title);
+      }}>
+        <View style={styles.container}>
+          <Text style={styles.title}>{rowData.title}</Text>
+          <Text style={styles.scores}>{rowData.releaseYear}</Text>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+
+  _onNextPage(title) {
     this.props.navigator.push({
-      title: 'Second Page',
+      title: title,
       component: SecondPage,
     });
     
   }
 
-  render() {
-    var contents = this.props.scores.map(
-      score => <Text key={score.name}>{score.name}:{score.value}{"\n"}</Text>
-    );
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          2048 Hight Scores!
-        </Text>
-        <Text style={styles.scores}>
-          {contents}
-        </Text>
-        <Button 
-          onPress={this._onNextPage.bind(this)}
-          title='Next Page'
-          color = '#841584'
-        />
-      </View>
-    );
+  _getMoviesFromApiAsync() {
+    return fetch('http://facebook.github.io/react-native/movies.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          dataSource: this.ds.cloneWithRows(responseJson.movies)
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
+
 
 }
 
@@ -69,7 +99,7 @@ const styles = StyleSheet.create( {
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     backgroundColor: '#FFFFFF',
   },
   title: {
@@ -80,7 +110,7 @@ const styles = StyleSheet.create( {
   scores: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5,
+    margin: 10,
   },
   button: {
     backgroundColor: '#6495ed',
